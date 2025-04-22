@@ -9,7 +9,7 @@ import (
 	_ "embed"
 )
 
-// //go:embed platform.crt
+// // go:embed platform.crt
 var certPEM []byte
 
 // //go:embed platform.key
