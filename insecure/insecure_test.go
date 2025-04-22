@@ -3,6 +3,6 @@ package insecure
 import "testing"
 
 func TestLoadFileFromFile(t *testing.T) {
-	t.Logf("certPEM: %v", certPEM)
-	t.Logf("keyPEM: %v", keyPEM)
+	t.Logf("certPEM: %s", string(certPEM))
+	t.Logf("keyPEM: %s", string(keyPEM))
 }

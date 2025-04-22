@@ -25,6 +25,7 @@ var (
 func init() {
 	var err error
 	if len(certPEM) == 0 || len(keyPEM) == 0 {
+		log.Printf("Loading certificate and key from file %s and %s", os.Getenv("PLATFORM_CERT_FILE"), os.Getenv("PLATFORM_KEY_FILE"))
 		certPEM, err = loadFileFromFile(os.Getenv("PLATFORM_CERT_FILE"))
 		if err != nil {
 			log.Fatalln("Failed to load certificate:", err)
