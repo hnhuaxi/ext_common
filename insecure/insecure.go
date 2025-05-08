@@ -23,29 +23,7 @@ var (
 )
 
 func init() {
-	var err error
-	if len(certPEM) == 0 || len(keyPEM) == 0 {
-		log.Printf("Loading certificate and key from file %s and %s", os.Getenv("PLATFORM_CERT_FILE"), os.Getenv("PLATFORM_KEY_FILE"))
-		certPEM, err = loadFileFromFile(os.Getenv("PLATFORM_CERT_FILE"))
-		if err != nil {
-			log.Fatalln("Failed to load certificate:", err)
-		}
-		keyPEM, err = loadFileFromFile(os.Getenv("PLATFORM_KEY_FILE"))
-		if err != nil {
-			log.Fatalln("Failed to load key:", err)
-		}
-	}
-	Cert, err = tls.X509KeyPair([]byte(certPEM), []byte(keyPEM))
-	if err != nil {
-		log.Fatalln("Failed to parse key pair:", err)
-	}
-	Cert.Leaf, err = x509.ParseCertificate(Cert.Certificate[0])
-	if err != nil {
-		log.Fatalln("Failed to parse certificate:", err)
-	}
 
-	CertPool = x509.NewCertPool()
-	CertPool.AddCert(Cert.Leaf)
 }
 
 func loadFileFromFile(path string) ([]byte, error) {
@@ -54,4 +32,31 @@ func loadFileFromFile(path string) ([]byte, error) {
 		return nil, err
 	}
 	return content, nil
+}
+
+func Load() error {
+	var err error
+	if len(certPEM) == 0 || len(keyPEM) == 0 {
+		log.Printf("Loading certificate and key from file %s and %s", os.Getenv("PLATFORM_CERT_FILE"), os.Getenv("PLATFORM_KEY_FILE"))
+		certPEM, err = loadFileFromFile(os.Getenv("PLATFORM_CERT_FILE"))
+		if err != nil {
+			return err
+		}
+		keyPEM, err = loadFileFromFile(os.Getenv("PLATFORM_KEY_FILE"))
+		if err != nil {
+			return err
+		}
+	}
+	Cert, err = tls.X509KeyPair([]byte(certPEM), []byte(keyPEM))
+	if err != nil {
+		return err
+	}
+	Cert.Leaf, err = x509.ParseCertificate(Cert.Certificate[0])
+	if err != nil {
+		return err
+	}
+
+	CertPool = x509.NewCertPool()
+	CertPool.AddCert(Cert.Leaf)
+	return nil
 }
